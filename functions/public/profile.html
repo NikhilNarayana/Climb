@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>This is title</title>
+	 <script src="/__/firebase/5.5.8/firebase-app.js"></script>
+  	<script src="/__/firebase/5.5.8/firebase-auth.js"></script>
+  	<script src="/__/firebase/init.js"></script>
+
+	<script type="text/javascript">
+
+	function SignOut() {
+        firebase.auth().signOut();
+      	window.location = 'index.html';
+    }
+
+	function initApp(){
+
+	 firebase.auth().onAuthStateChanged(function(user) {
+	    if (!user) {
+	    	window.location = 'index.html';
+	    } 
+      });
+      // [END authstatelistener]
+      document.getElementById('quickstart-sign-out').addEventListener('click', SignOut, false);
+    }
+
+
+
+
+	window.onload = function() {
+      initApp();
+    };
+	</script>
+
+</head>
+<body>
+	<button class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-out" name="signup">Sign out</button>
+	Profile Page
+</body>
+</html>

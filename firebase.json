@@ -9,10 +9,10 @@
     "source": "functions"
   },
   "hosting": {
-    "public": "public",
+    "public": "functions/public",
     "rewrites" : [{
-      "source": "/hello",
-      "function": "hello"
+      "source": "/profile",
+      "function": "profile"
     }],
     "ignore": [
       "firebase.json",

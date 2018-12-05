@@ -70,6 +70,8 @@ limitations under the License.
         // [END authwithemail]
       }
       document.getElementById('quickstart-sign-in').disabled = true;
+      //window.location = 'profile.html';
+
     }
     /**
      * Handles the sign up button press.
@@ -186,6 +188,12 @@ limitations under the License.
       document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
     }
     window.onload = function() {
+      firebase.auth().onAuthStateChanged(function(user) {
+        
+        if (user) {
+          window.location = 'profile.html';
+        } 
+      });
       initApp();
     };
   </script>
@@ -198,7 +206,7 @@ limitations under the License.
     <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
       <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
         <a href="/"><h3>Firebase Authentication</h3></a>
-        <a href="/hello"><h3>Firebase Authentication</h3></a>
+       
       </div>
     </div>
   </header>
