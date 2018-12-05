@@ -38,16 +38,15 @@
 		
 		});
 
-		
 		var ref = database.ref('userLadders');
-		ref.child(userId).set({
+		ref.child(firebase.auth().currentUser.uid).set({
 			ladder: shortcode
-		});
-
-		const dbref = firebase.database().ref();
-		const oneRef = dbref.child("ladders").child(document.getElementById('shortcode').textContent);
-		oneRef.on('value', getLadder, errData);
-
+		}).then(function() {
+	    	//on completion
+	    	window.location = 'ladder.html';
+	 	}).catch(function(error) {
+	    console.log('Synchronization failed');
+	  	});
 
 	}
 
@@ -64,31 +63,6 @@
 		document.getElementById('shortcode').textContent = ladderId;
 	    initApp();
     };
-
-   function getLadder(data){
-    	try{
-    		console.log(data.val().Creator);
-    		var database = firebase.database();
-    		var key = Object.keys(data.val())
-    		var userId = firebase.auth().currentUser.uid;
-			var ref = database.ref('userLadders');
-			ref.child(userId).set({
-				ladder: data.key
-			});
-			document.getElementById('account-name').textContent = data.key;
-			document.getElementById('account-name').textContent = data.val().Game;
-			window.location = 'ladder.html';
-    	}catch(err){
-    		alert("Invalid ladder code");
-    	}
-    	
-    	
-    }
-
-
-    function errData(data){
-    	console.log(data);
-    }
 
 
 	</script>
