@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ladder</title>
+	
+	 <script src="/__/firebase/5.5.8/firebase-app.js"></script>
+  	<script src="/__/firebase/5.5.8/firebase-auth.js"></script>
+  	<script src="/__/firebase/5.5.8/firebase-database.js"></script>
+  	<script src="/__/firebase/init.js"></script>
+  
+	<script type="text/javascript">
+
+	function Profile(){
+		window.location = 'profile.html';
+	}
+	
+	function initApp(){
+		var userId;
+		firebase.auth().onAuthStateChanged(function(user) {
+	    	if(user){
+	    		userId = user.uid;
+	    		const ref = firebase.database().ref();
+				const oneRef = ref.child("userLadders").child(userId);
+				oneRef.on('value', getData, errData);
+	    	}
+      	});
+
+		
+
+	}
+
+	function getData(data){
+		var lad = data.val().ladder;
+		const ref = firebase.database().ref();
+		const oneRef = ref.child("ladders").child(lad);
+		oneRef.on('value', getLadder, errData);
+	}
+
+ 	function getLadder(data){
+    	try{
+    		console.log(data.val().Creator);
+    		var database = firebase.database();
+    		document.getElementById("creator").innerHTML = "Room Creator: " + data.val().Creator;
+			document.getElementById("game").innerHTML = "Game: " + data.val().Game;
+			document.getElementById("setLength").innerHTML = "Set length: " + data.val().Set_Length;
+			document.getElementById("maxPlayers").innerHTML = "Room limit: " + data.val().Max_players;
+    	}catch(err){
+    		
+    	}
+    	
+    	
+    }
+	function errData(err){
+		console.log(err);
+	}
+	
+	window.onload = function() {
+		document.getElementById('profile').addEventListener('click', Profile, false);
+		firebase.auth().onAuthStateChanged(function(user) {
+	    
+      	});
+	    initApp();
+    };
+
+   
+
+
+	</script>
+
+</head>
+<body>
+	 <h1> Ladder </h1>
+	 <p id="creator"></p>
+	 <br/><br/>
+	 <p id="game"></p>
+	 <br/><br/>
+	 <p id="setLength"></p>
+	 <br/><br/>
+	 <p id="maxPlayers"></p>
+	 <br/><br/>
+	 <button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
+</body>
+</html>/

@@ -69,7 +69,12 @@ limitations under the License.
         });
 
       firebase.auth().onAuthStateChanged(function(user) {
-        
+        user.updateProfile({
+
+
+
+
+        })
         if (user) {
           window.location = 'profile.html';
         } 
@@ -196,6 +201,11 @@ limitations under the License.
       document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
     }
     window.onload = function() {
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          window.location = 'profile.html';
+        } 
+      });
       initApp();
     };
   </script>
