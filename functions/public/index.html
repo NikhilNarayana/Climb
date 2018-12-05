@@ -67,6 +67,13 @@ limitations under the License.
           document.getElementById('quickstart-sign-in').disabled = false;
           // [END_EXCLUDE]
         });
+
+      firebase.auth().onAuthStateChanged(function(user) {
+        
+        if (user) {
+          window.location = 'profile.html';
+        } 
+      });
         // [END authwithemail]
       }
       document.getElementById('quickstart-sign-in').disabled = true;
@@ -89,6 +96,7 @@ limitations under the License.
       }
       // Sign in with email and pass.
       // [START createwithemail]
+      firebase.auth().crea
       firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -188,12 +196,6 @@ limitations under the License.
       document.getElementById('quickstart-password-reset').addEventListener('click', sendPasswordReset, false);
     }
     window.onload = function() {
-      firebase.auth().onAuthStateChanged(function(user) {
-        
-        if (user) {
-          window.location = 'profile.html';
-        } 
-      });
       initApp();
     };
   </script>
