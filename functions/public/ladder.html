@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+	<br>
+	<div class="column col-12" id="nav">
+		<header class="navbar">
+		  <section class="navbar-section">
+		    <img src="images/Climb.png" class="navbar-brand mr-2" style="width:10%;"/>
+		    <a href="https://github.com/NikhilNarayana/Climb" class="btn btn-link">GitHub</a>
+		  </section>
+		</header>
+	</div>
+	<br>
 	<title>Ladder</title>
 	
 	 <script src="/__/firebase/5.5.8/firebase-app.js"></script>
@@ -13,15 +24,97 @@
 	function Profile(){
 		window.location = 'profile.html';
 	}
+
+	function Leave(){
+		var user = firebase.auth().currentUser;
+		const ref = firebase.database().ref();
+
+		/*ref.child('userLadders').child(user.uid).remove().then(function(){
+
+
+
+
+		}).catch(function(error){
+
+		});*/
+		var ladder;
+		ref.child('userLadders').orderByKey().equalTo(user.uid).once("value",snapshot => {
+		    if (snapshot.exists()){
+		    	ladder = snapshot.val()[Object.keys(snapshot.val())[0]].ladder;
+		    	ref.child('userLadders').child(user.uid).remove()
+		    }
+		}).then(function() {
+			
+			ref.child(ladder).orderByChild('playerId').equalTo(user.uid).once("value",snapshot => {
+			    if (snapshot.exists()){
+			    	ref.child(ladder).child(snapshot.node_.children_.root_.key).remove();
+			    }
+			}).then(function() {
+				
+				window.location = 'profile.html';
+
+
+				
+		  
+			}).catch(function(error) {
+		 	
+
+			});
+
+
+
+
+	  
+		}).catch(function(error) {
+	 	
+
+		});
+
+	}
 	
 	function initApp(){
 		var userId;
 		firebase.auth().onAuthStateChanged(function(user) {
 	    	if(user){
-	    		userId = user.uid;
-	    		const ref = firebase.database().ref();
-				const oneRef = ref.child("userLadders").child(userId);
-				oneRef.on('value', getData, errData);
+	    		//userId = user.uid;
+	    		//const ref = firebase.database().ref();
+				//const oneRef = ref.child("userLadders").child(userId);
+				//oneRef.on('value', getData, errData);
+
+				const ref = firebase.database().ref();
+				var ladder;
+				//console.log(ref.child('userLadders').child(user.uid).child('ladder'));
+				ref.child('userLadders').orderByKey().equalTo(user.uid).once("value",snapshot => {
+				    if (snapshot.exists()){
+				    	ladder = snapshot.val()[Object.keys(snapshot.val())[0]].ladder;
+				    }
+				}).then(function() {
+					console.log("The ladder is " + ladder);
+					ref.child("ladders").orderByKey().equalTo(ladder).once("value",snapshot => {
+					    if (snapshot.exists()){
+					    	console.log(snapshot.val());
+					    	var room = snapshot.val()[Object.keys(snapshot.val())[0]].Ladder_name;
+					    	var creator = snapshot.val()[Object.keys(snapshot.val())[0]].Creator;
+					    	var game = snapshot.val()[Object.keys(snapshot.val())[0]].Game;
+					    	var setLength = snapshot.val()[Object.keys(snapshot.val())[0]].Set_length;
+					    	var maxPlayers = snapshot.val()[Object.keys(snapshot.val())[0]].Max_players;
+
+					    	document.getElementById("ladderName").innerHTML = "Room: " + room;
+				    		document.getElementById("creator").innerHTML = "Room Creator: " + creator;
+							document.getElementById("game").innerHTML = "Game: " + game;
+							document.getElementById("setLength").innerHTML = "Set length: " + setLength;
+							document.getElementById("maxPlayers").innerHTML = "Room limit: " + maxPlayers;
+					    }
+					});
+
+			  
+				}).catch(function(error) {
+			 	
+
+				});
+    			//ref.child("bhh2dhhaq").orderByChild("playerName")
+    			
+				
 	    	}
       	});
 
@@ -29,7 +122,7 @@
 
 	}
 
-	function getData(data){
+	/*function getData(data){
 		var lad = data.val().ladder;
 		const ref = firebase.database().ref();
 		const oneRef = ref.child("ladders").child(lad);
@@ -40,9 +133,10 @@
     	try{
     		console.log(data.val().Creator);
     		var database = firebase.database();
+    		document.getElementById("ladderName").innerHTML = "Room: " + data.val().Ladder_name;
     		document.getElementById("creator").innerHTML = "Room Creator: " + data.val().Creator;
 			document.getElementById("game").innerHTML = "Game: " + data.val().Game;
-			document.getElementById("setLength").innerHTML = "Set length: " + data.val().Set_Length;
+			document.getElementById("setLength").innerHTML = "Set length: " + data.val().Set_length;
 			document.getElementById("maxPlayers").innerHTML = "Room limit: " + data.val().Max_players;
     	}catch(err){
     		
@@ -52,10 +146,11 @@
     }
 	function errData(err){
 		console.log(err);
-	}
+	}*/
 	
 	window.onload = function() {
 		document.getElementById('profile').addEventListener('click', Profile, false);
+		document.getElementById('leave-ladder').addEventListener('click', Leave, false);
 		firebase.auth().onAuthStateChanged(function(user) {
 	    
       	});
@@ -77,7 +172,8 @@
 
 </head>
 <body>
-	 <h1> Ladder </h1>
+	 <h1 id="ladderName"></h1>
+	 <br/><br/>
 	 <p id="creator"></p>
 	 <br/><br/>
 	 <p id="game"></p>
@@ -87,5 +183,6 @@
 	 <p id="maxPlayers"></p>
 	 <br/><br/>
 	 <button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
+	 <button class="mdl-button mdl-js-button mdl-button--raised" id="leave-ladder" name="signup">Leave ladder</button>
 </body>
 </html>

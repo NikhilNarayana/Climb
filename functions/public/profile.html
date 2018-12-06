@@ -66,6 +66,19 @@
 			    }
 			});*/
 
+			var user = firebase.auth().currentUser;
+			user.updateProfile({
+			  ladderId: ladder
+			}).then(function() {
+				//Success
+				
+
+			  
+			}).catch(function(error) {
+			 	
+
+			});
+			console.log("Room code: " + user.ladderId);
 			const oneRef = ref.child("ladders").child(ladder);
 			oneRef.on('value', getLadder, errData);
     	}
