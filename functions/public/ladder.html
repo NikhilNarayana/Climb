@@ -59,6 +59,14 @@
 		firebase.auth().onAuthStateChanged(function(user) {
 	    
       	});
+
+      	/*var ref = firebase.database();
+      	ref.child("userLadders").orderByChild("ID").equalTo("U1EL5623").once("value",snapshot => {
+		    if (snapshot.exists()){
+		      const userData = snapshot.val();
+		      console.log("exists!", userData);
+		    }
+		});*/
 	    initApp();
     };
 
@@ -80,4 +88,4 @@
 	 <br/><br/>
 	 <button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
 </body>
-</html>/
+</html>

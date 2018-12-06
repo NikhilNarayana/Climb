@@ -39,7 +39,18 @@
     function JoinLadder(){
     	var ladder = prompt("Enter ladder code:");
     	if (ladder != null){
+
     		const ref = firebase.database().ref();
+    		//ref.child("bhh2dhhaq").orderByChild("playerName")
+    		/*ref.child("userLadders").orderByChild("ladder").equalTo("rgaxucoex").once("value",snapshot => {
+			    if (snapshot.exists()){
+			    	 console.log(snapshot);
+				    console.log(snapshot.node_.children_.root_.key);
+			    }else{
+			    	console.log("User is not in this table");
+			    }
+			});*/
+
 			const oneRef = ref.child("ladders").child(ladder);
 			oneRef.on('value', getLadder, errData);
     	}
@@ -50,6 +61,17 @@
 	 firebase.auth().onAuthStateChanged(function(user) {
 	    if (!user) {
 	    	window.location = 'index.html';
+	    }else{
+	    	const ref = firebase.database().ref();
+    		//ref.child("bhh2dhhaq").orderByChild("playerName")
+			ref.child("userLadders").orderByKey().equalTo(user.uid).once("value",snapshot => {
+			    if (snapshot.exists()){
+			    	 document.getElementById('join-ladder').disabled = true;
+			    }else{
+			    	document.getElementById('join-ladder').disabled = false;
+			    }
+			});
+
 	    } 
       });
       // [END authstatelistener]
@@ -65,6 +87,7 @@
 
 
 	window.onload = function() {
+
 		var ladderId = Math.random().toString(36).substr(2, 9)
 		console.log(ladderId);
 		const ref = firebase.database().ref();
@@ -91,7 +114,7 @@
     	
     }
 
-    function getLadder(data){
+    /*function getLadder(data){
     	try{
     		console.log(data.val().Creator);
     		var database = firebase.database();
@@ -101,15 +124,23 @@
 			ref.child(userId).set({
 				ladder: data.key
 			});
-			document.getElementById('account-name').textContent = data.key;
-			document.getElementById('account-name').textContent = data.val().Game;
+
+			ref = database.ref(data.key);
+
+			var data = {
+				playerId: firebase.auth().currentUser.uid,
+				playerName: firebase.auth().currentUser.displayName
+			}
+
+			ref.push(data);
+			
 			window.location = 'ladder.html';
     	}catch(err){
     		alert("Invalid ladder code");
     	}
     	
     	
-    }
+    }*/
 
 
     function errData(data){

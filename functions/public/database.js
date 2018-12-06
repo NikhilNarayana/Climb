@@ -24,7 +24,7 @@ const config = {
 	var database = firebase.database();
 
 
-	var ref = database.ref('ladders');
+	var ref = database.ref('ladders/' + 'players');
 
 	/*ref.child("test2").set({
 		value: "val"

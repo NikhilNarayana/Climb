@@ -38,6 +38,15 @@
 		
 		});
 
+		ref = database.ref(shortcode);
+
+		var data = {
+			playerId: firebase.auth().currentUser.uid,
+			playerName: firebase.auth().currentUser.displayName
+		}
+
+		ref.push(data);
+
 		var ref = database.ref('userLadders');
 		ref.child(firebase.auth().currentUser.uid).set({
 			ladder: shortcode
