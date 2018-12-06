@@ -152,6 +152,17 @@
 		var table = document.createElement('table');
 		//document.getElementById('tablearea').style.padding = "5px";
 		var tabl = document.getElementById('tablearea');
+		var head = document.createElement('tr');
+		var ranktitle = document.createElement('td');
+		var pnametitle = document.createElement('td');
+		var setsptitle = document.createElement('td');
+		var setswtitle = document.createElement('td');
+		var gameswtitle = document.createElement('td');
+		ranktitle.appendChild(document.createTextNode('Rank'))
+		pnametitle.appendChild(document.createTextNode('Player Name'))
+		setsptitle.appendChild(document.createTextNode('Sets Played'))
+		setswtitle.appendChild(document.createTextNode('Set Win Percentage'))
+		gameswtitle.appendChild(document.createTextNode('Game Win Percentage'))
 		for (var i = 1; i < 4; i++){
 		    var tr = document.createElement('tr');   
 
