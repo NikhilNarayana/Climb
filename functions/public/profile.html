@@ -37,6 +37,10 @@
     	window.location = 'createLadder.html';
     }
 
+    function LoadLadder(){
+    	window.location = 'ladder.html';
+    }
+
     function JoinLadder(){
     	var ladder = prompt("Enter ladder code:");
     	if (ladder != null){
@@ -68,8 +72,10 @@
 			ref.child("userLadders").orderByKey().equalTo(user.uid).once("value",snapshot => {
 			    if (snapshot.exists()){
 			    	 document.getElementById('join-ladder').disabled = true;
+			    	 document.getElementById('load-ladder').disabled = false;
 			    }else{
 			    	document.getElementById('join-ladder').disabled = false;
+			    	document.getElementById('load-ladder').disabled = true;
 			    }
 			});
 
@@ -81,6 +87,7 @@
       document.getElementById('quickstart-sign-out').addEventListener('click', SignOut, false);
       document.getElementById('create-ladder').addEventListener('click', CreateLadder, false);
       document.getElementById('join-ladder').addEventListener('click', JoinLadder, false);
+      document.getElementById('load-ladder').addEventListener('click', LoadLadder, false);
     }
 
 
@@ -115,7 +122,7 @@
     	
     }
 
-    /*function getLadder(data){
+    function getLadder(data){
     	try{
     		console.log(data.val().Creator);
     		var database = firebase.database();
@@ -141,7 +148,7 @@
     	}
     	
     	
-    }*/
+    }
 
 
     function errData(data){
@@ -166,5 +173,7 @@
 	<button class="mdl-button mdl-js-button mdl-button--raised" id="create-ladder" name="signup">Create ladder</button>
 	<br/><br/>
 	<button class="mdl-button mdl-js-button mdl-button--raised" id="join-ladder" name="signup">Join ladder</button>
+	<br/><br/>
+	<button class="mdl-button mdl-js-button mdl-button--raised" id="load-ladder" name="signup">Ladder</button>
 </body>
 </html>

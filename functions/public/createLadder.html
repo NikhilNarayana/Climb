@@ -16,13 +16,14 @@
 
 	function Create(){
 		console.log(document.getElementById('shortcode').textContent)
-		var username, shortCode, game, maxPlayers, setLength;
+		var username, shortCode, game, maxPlayers, setLength, ladderName;
 
 		username = firebase.auth().currentUser.displayName;
 		shortcode = document.getElementById('shortcode').textContent;
 		game = document.getElementById('gameName').value;
 		maxPlayers = document.getElementById('maxPlayers').value;
 		setLength = document.getElementById('setLength').value;
+		ladderName = document.getElementById('ladderName').value;
 		var userId = firebase.auth().currentUser.uid;
 		var database = firebase.database();
 
@@ -30,11 +31,12 @@
 		var ref = database.ref('ladders');
 
 		ref.child(shortcode).set({
+			Ladder_name: ladderName,
 			Creator: username,
 			UserId: userId,
 			Game: game,
 			Max_players: maxPlayers,
-			Set_Length: setLength
+			Set_length: setLength
 		
 		});
 
@@ -82,6 +84,8 @@
 	 Ladder ID: 
 	 <code id="shortcode"></code>
 	 <br><br>
+	 <input class="mdl-textfield__input" style="display:inline;width:auto;" type="ladderName" id="ladderName" name="ladderName" placeholder="Name your ladder"/>
+	 <br/><br/>
 	 <input class="mdl-textfield__input" style="display:inline;width:auto;" type="gameName" id="gameName" name="gameName" placeholder="Name of game"/>
 	 <br/><br/>
 	 Best of
