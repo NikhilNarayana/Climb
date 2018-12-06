@@ -163,6 +163,12 @@
 		setsptitle.appendChild(document.createTextNode('Sets Played'))
 		setswtitle.appendChild(document.createTextNode('Set Win Percentage'))
 		gameswtitle.appendChild(document.createTextNode('Game Win Percentage'))
+		head.appendChild(ranktitle)
+		head.appendChild(pnametitle)
+		head.appendChild(setsptitle)
+		head.appendChild(setswtitle)
+		head.appendChild(gameswtitle)
+		tabl.appendChild(head)
 		for (var i = 1; i < 4; i++){
 		    var tr = document.createElement('tr');   
 
