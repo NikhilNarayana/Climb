@@ -149,6 +149,45 @@
 	}*/
 	
 	window.onload = function() {
+		var table = document.createElement('table');
+		//document.getElementById('tablearea').style.padding = "5px";
+		var tabl = document.getElementById('tablearea');
+		for (var i = 1; i < 4; i++){
+		    var tr = document.createElement('tr');   
+
+		    var rank = document.createElement('td');
+		    rank.style.padding = "15px";
+		    var pname = document.createElement('td');
+		    pname.style.padding = "15px";
+		    var setsplayed = document.createElement('td');
+		    setsplayed.style.padding = "15px";
+		    var setwinpercent = document.createElement('td');
+		    setwinpercent.style.padding = "15px";
+		    var gamewinpercent = document.createElement('td');
+		    gamewinpercent.style.padding = "15px";
+
+		    var text1 = document.createTextNode(String(i));
+		    var text2 = document.createTextNode('Ali');
+		    var text3 = document.createTextNode('3');
+		    var text4 = document.createTextNode('66.66%');
+		    var text5 = document.createTextNode('55.55%');
+
+
+		    rank.appendChild(text1);
+		    pname.appendChild(text2);
+		    setsplayed.appendChild(text3);
+		    setwinpercent.appendChild(text4);
+		    gamewinpercent.appendChild(text5);
+		    tr.appendChild(rank);
+		    tr.appendChild(pname);
+		    tr.appendChild(setsplayed);
+		    tr.appendChild(setwinpercent);
+		    tr.appendChild(gamewinpercent);
+
+
+		    table.appendChild(tr);
+		}
+		tabl.appendChild(table);
 		document.getElementById('profile').addEventListener('click', Profile, false);
 		document.getElementById('leave-ladder').addEventListener('click', Leave, false);
 		firebase.auth().onAuthStateChanged(function(user) {
@@ -171,18 +210,24 @@
 	</script>
 
 </head>
+<style>
+td {
+
+	border: 1px solid #FF0000;
+}
+
+</style>
 <body>
 	 <h1 id="ladderName"></h1>
-	 <br/><br/>
 	 <p id="creator"></p>
-	 <br/><br/>
 	 <p id="game"></p>
-	 <br/><br/>
 	 <p id="setLength"></p>
-	 <br/><br/>
 	 <p id="maxPlayers"></p>
-	 <br/><br/>
-	 <button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
-	 <button class="mdl-button mdl-js-button mdl-button--raised" id="leave-ladder" name="signup">Leave ladder</button>
+	 <table id="tablearea"></table>
+	 <br>
 </body>
+<footer>
+	<button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
+	<button class="mdl-button mdl-js-button mdl-button--raised" id="leave-ladder" name="signup">Leave ladder</button>
+</footer>
 </html>
