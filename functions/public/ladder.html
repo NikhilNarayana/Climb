@@ -147,64 +147,146 @@
 	function errData(err){
 		console.log(err);
 	}*/
+
+	function sortSets(a,b){
+		if (a[2] === b[2]) {
+        	if (a[3] === b[3]) {
+        		return 0;
+	   		}
+		    else {
+		        return (a[3] > b[3]) ? -1 : 1;
+		    }
+   		}
+	    else {
+	        return (a[2] > b[2]) ? -1 : 1;
+	    }
+	}
+
 	
 	window.onload = function() {
-		var table = document.createElement('table');
-		//document.getElementById('tablearea').style.padding = "5px";
-		var tabl = document.getElementById('tablearea');
-		var head = document.createElement('tr');
-		var ranktitle = document.createElement('td');
-		var pnametitle = document.createElement('td');
-		var setsptitle = document.createElement('td');
-		var setswtitle = document.createElement('td');
-		var gameswtitle = document.createElement('td');
-		ranktitle.appendChild(document.createTextNode('Rank'))
-		pnametitle.appendChild(document.createTextNode('Player Name'))
-		setsptitle.appendChild(document.createTextNode('Sets Played'))
-		setswtitle.appendChild(document.createTextNode('Set Win Percentage'))
-		gameswtitle.appendChild(document.createTextNode('Game Win Percentage'))
-		head.appendChild(ranktitle)
-		head.appendChild(pnametitle)
-		head.appendChild(setsptitle)
-		head.appendChild(setswtitle)
-		head.appendChild(gameswtitle)
-		tabl.appendChild(head)
-		for (var i = 1; i < 4; i++){
-		    var tr = document.createElement('tr');   
+		
+		var ladder;
+		var ref = firebase.database().ref();
+		var ladderData;
+		firebase.auth().onAuthStateChanged(function(user) {
 
-		    var rank = document.createElement('td');
-		    rank.style.padding = "15px";
-		    var pname = document.createElement('td');
-		    pname.style.padding = "15px";
-		    var setsplayed = document.createElement('td');
-		    setsplayed.style.padding = "15px";
-		    var setwinpercent = document.createElement('td');
-		    setwinpercent.style.padding = "15px";
-		    var gamewinpercent = document.createElement('td');
-		    gamewinpercent.style.padding = "15px";
+	    	ref.child('userLadders').orderByKey().equalTo(user.uid).once("value",snapshot => {
+		    if (snapshot.exists()){
+		    	ladder = snapshot.val()[Object.keys(snapshot.val())[0]].ladder;
+		    	console.log(ladder);
+		    }
+			}).then(function() {
+				
+				ref.child(ladder).orderByKey().once("value",snapshot => {
+				    if (snapshot.exists()){
+				    	var playerData = snapshot.val();
+				    	var keys = Object.keys(playerData);
+				    	ladderData = new Array(keys.length);
+				    	for(var i = 0; i < ladderData.length; i++){
+				    		ladderData[i] = new Array(5);
+				    	}
 
-		    var text1 = document.createTextNode(String(i));
-		    var text2 = document.createTextNode('Ali');
-		    var text3 = document.createTextNode('3');
-		    var text4 = document.createTextNode('66.66%');
-		    var text5 = document.createTextNode('55.55%');
+				    	for(var i = 0; i < ladderData.length; i++){
+				    		var k = keys[i];
+				    		ladderData[i][0] = playerData[k].playerName;
+				    		ladderData[i][1] = playerData[k].playerId;
+				    		ladderData[i][2] = playerData[k].setWins;
+				    		ladderData[i][3] = playerData[k].setPercentage;
+				    		ladderData[i][4] = playerData[k].gamePercentage;
+				    	}
+				    	
+				
+				    	//console.log(playerData[keys[0]].setWins);
+				    }
+				}).then(function() {
+					ladderData.sort(sortSets);
+					//ladderData.sort(sortSetPercentage);
+
+					for(var i = 0; i < ladderData.length; i++){
+						for(var j = 0; j < 5; j++){
+							console.log(ladderData[i][j]);
+						}
+					}
+					
+
+					var table = document.createElement('table');
+					//document.getElementById('tablearea').style.padding = "5px";
+					var tabl = document.getElementById('tablearea');
+					var head = document.createElement('tr');
+					var ranktitle = document.createElement('td');
+					var pnametitle = document.createElement('td');
+					var setsptitle = document.createElement('td');
+					var setswtitle = document.createElement('td');
+					var gameswtitle = document.createElement('td');
+					ranktitle.appendChild(document.createTextNode('Rank'))
+					pnametitle.appendChild(document.createTextNode('Player Name'))
+					setsptitle.appendChild(document.createTextNode('Sets Played'))
+					setswtitle.appendChild(document.createTextNode('Set Win Percentage'))
+					gameswtitle.appendChild(document.createTextNode('Game Win Percentage'))
+					head.appendChild(ranktitle)
+					head.appendChild(pnametitle)
+					head.appendChild(setsptitle)
+					head.appendChild(setswtitle)
+					head.appendChild(gameswtitle)
+					table.appendChild(head)
+					for (var i = 0; i < ladderData.length; i++){
+					    var tr = document.createElement('tr');   
+
+					    var rank = document.createElement('td');
+					    rank.style.padding = "15px";
+					    var pname = document.createElement('td');
+					    pname.style.padding = "15px";
+					    var setsplayed = document.createElement('td');
+					    setsplayed.style.padding = "15px";
+					    var setwinpercent = document.createElement('td');
+					    setwinpercent.style.padding = "15px";
+					    var gamewinpercent = document.createElement('td');
+					    gamewinpercent.style.padding = "15px";
+
+					    var text1 = document.createTextNode(String(i + 1));
+					    var text2 = document.createTextNode(ladderData[i][0]);
+					    var text3 = document.createTextNode(ladderData[i][2]);
+					    var text4 = document.createTextNode(ladderData[i][3]);
+					    var text5 = document.createTextNode(ladderData[i][4]);
 
 
-		    rank.appendChild(text1);
-		    pname.appendChild(text2);
-		    setsplayed.appendChild(text3);
-		    setwinpercent.appendChild(text4);
-		    gamewinpercent.appendChild(text5);
-		    tr.appendChild(rank);
-		    tr.appendChild(pname);
-		    tr.appendChild(setsplayed);
-		    tr.appendChild(setwinpercent);
-		    tr.appendChild(gamewinpercent);
+					    rank.appendChild(text1);
+					    pname.appendChild(text2);
+					    setsplayed.appendChild(text3);
+					    setwinpercent.appendChild(text4);
+					    gamewinpercent.appendChild(text5);
+					    tr.appendChild(rank);
+					    tr.appendChild(pname);
+					    tr.appendChild(setsplayed);
+					    tr.appendChild(setwinpercent);
+					    tr.appendChild(gamewinpercent);
 
 
-		    table.appendChild(tr);
-		}
-		tabl.appendChild(table);
+					    table.appendChild(tr);
+					}
+					tabl.appendChild(table);
+
+
+			  
+				}).catch(function(error) {
+			 	
+
+				});
+				
+
+
+				
+		  
+			}).catch(function(error) {
+		 	
+
+			});
+      	});
+		
+		
+
+
+
 		document.getElementById('profile').addEventListener('click', Profile, false);
 		document.getElementById('leave-ladder').addEventListener('click', Leave, false);
 		firebase.auth().onAuthStateChanged(function(user) {
