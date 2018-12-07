@@ -207,6 +207,14 @@
 					    	var setLength = snapshot.val()[Object.keys(snapshot.val())[0]].Set_length;
 					    	var maxPlayers = snapshot.val()[Object.keys(snapshot.val())[0]].Max_players;
 
+					    	if(creator == user.displayName) {
+					    		document.getElementById("leave-ladder").style.display="none";
+					    	}
+					    	else {
+					    		document.getElementById("delete-ladder").style.display="none";
+					    	}
+
+
 					    	document.getElementById("ladderName").innerHTML = "Room: " + room;
 				    		document.getElementById("creator").innerHTML = "Room Creator: " + creator;
 				    		document.getElementById("ladderId").innerHTML = "Ladder Id: " + ladder;
