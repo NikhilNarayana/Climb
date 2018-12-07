@@ -153,7 +153,9 @@
 							  	ref = firebase.database().ref();
 							  	var data = {
 							  		player1: snapshot.val().challengerId,
-							  		player2: user.uid
+							  		player1Name: snapshot.val().challengerName, 
+							  		player2: user.uid,
+							  		player2Name: user.displayName
 							  	}
 
 							  	ref.child("currentSets").push(data);
@@ -163,7 +165,12 @@
 							  
 							}
 						}
-					});	  
+					});	
+
+		    		ref.child("currentSets").orderByChild("player1").equalTo(user.uid).on("child_added", function(snapshot){
+		    			window.location = 'reportScore.html';
+		    		});
+
 		    } 
 		});
 

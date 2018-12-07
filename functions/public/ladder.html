@@ -265,11 +265,28 @@
 	function makeButton(uid){
 		firebase.auth().onAuthStateChanged(function(user) {
 			ref = firebase.database().ref();
-			ref.child("challenges").child(uid).set({
 
-				challengerId: user.uid,
-				challengerName: user.displayName
+			ref.child("challenges").orderByChild("challengerId").equalTo(user.uid).once("value",snapshot => {
+			    if (snapshot.exists()){
+			    	console.log(snapshot.val());
+			    	var playerData = snapshot.val();
+				   	var keys = Object.keys(playerData);
+				   	ref.child("challenges").child(keys[0]).remove()
+			    }
+			}).then(function(){
+				ref.child("challenges").child(uid).set({
+
+					challengerId: user.uid,
+					challengerName: user.displayName
+				});
+			}).catch(function(err){
+
 			});
+
+
+
+
+			
 
 
 		});
@@ -287,7 +304,9 @@
 							  	ref = firebase.database().ref();
 							  	var data = {
 							  		player1: snapshot.val().challengerId,
-							  		player2: user.uid
+							  		player1Name: snapshot.val().challengerName, 
+							  		player2: user.uid,
+							  		player2Name: user.displayName
 							  	}
 
 							  	ref.child("currentSets").push(data);
@@ -298,6 +317,10 @@
 							}
 						}
 					});	  
+
+					ref.child("currentSets").orderByChild("player1").equalTo(user.uid).on("child_added", function(snapshot){
+		    			window.location = 'reportScore.html';
+		    		});
 		    } 
 		});
 
@@ -362,7 +385,7 @@
 					var gameswtitle = document.createElement('td');
 					ranktitle.appendChild(document.createTextNode('Rank'))
 					pnametitle.appendChild(document.createTextNode('Player Name'))
-					setsptitle.appendChild(document.createTextNode('Sets Played'))
+					setsptitle.appendChild(document.createTextNode('Sets Wins'))
 					setswtitle.appendChild(document.createTextNode('Set Win Percentage'))
 					gameswtitle.appendChild(document.createTextNode('Game Win Percentage'))
 					head.appendChild(ranktitle)
@@ -388,8 +411,8 @@
 					    var text1 = document.createTextNode(String(i + 1));
 					    var text2 = document.createTextNode(ladderData[i][0]);
 					    var text3 = document.createTextNode(ladderData[i][2]);
-					    var text4 = document.createTextNode(ladderData[i][3]);
-					    var text5 = document.createTextNode(ladderData[i][4]);
+					    var text4 = document.createTextNode(ladderData[i][3] + "%");
+					    var text5 = document.createTextNode(ladderData[i][4] + "%");
 					   
 					    var button = document.createElement('button');
   						button.innerHTML = 'Challenge';
