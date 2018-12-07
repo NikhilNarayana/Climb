@@ -5,7 +5,8 @@ const config = {
     apiKey: "AIzaSyDYlEPVTwj8y123NMtD8tsQdo0osCXaPPE",
     authDomain: "climb-7de83.firebaseapp.com",
     databaseURL: "https://climb-7de83.firebaseio.com",
-    storageBucket: "gs://climb-7de83.appspot.com"
+    storageBucket: "gs://climb-7de83.appspot.com",
+    messagingSenderId: "1023550186669"
   };
  	
  	if (!firebase.apps.length) {

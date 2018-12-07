@@ -25,6 +25,52 @@
 		window.location = 'profile.html';
 	}
 
+	function Delete(){
+		var ladderData;
+		user = firebase.auth().currentUser;
+		var ladder;
+		ref = firebase.database().ref();
+		ref.child('userLadders').orderByKey().equalTo(user.uid).once("value",snapshot => {
+		    if (snapshot.exists()){
+		    	ladder = snapshot.val()[Object.keys(snapshot.val())[0]].ladder;
+		    	
+		    }
+		}).then(function() {
+			
+			console.log("ladder to delete is " + ladder);
+			ref.child(ladder).orderByKey().once("value",snapshot => {
+			    if (snapshot.exists()){
+			    	var playerData = snapshot.val();
+			    	var keys = Object.keys(playerData);
+			    	for(var i = 0; i < keys.length; i++){
+			    		var k = keys[i];
+			    		var id = playerData[k].playerId;
+			    		ref.child('userLadders').child(id).remove();
+			    	}
+
+			    }
+			}).then(function(){
+				ref.child(ladder).remove();
+				ref.child('ladders').child(ladder).remove().then(function(){
+					window.location = 'profile.html';
+				}).catch(function(error){
+
+				});
+
+			}).catch(function(error){
+
+			});
+				
+		  
+		}).catch(function(error) {
+		 	
+
+		});
+
+
+
+
+	}
 	function Leave(){
 		var user = firebase.auth().currentUser;
 		const ref = firebase.database().ref();
@@ -162,7 +208,48 @@
 	    }
 	}
 
-	
+	function makeButton(uid){
+		firebase.auth().onAuthStateChanged(function(user) {
+			ref = firebase.database().ref();
+			ref.child("challenges").child(uid).set({
+
+				challengerId: user.uid,
+				challengerName: user.displayName
+			});
+
+
+		});
+		
+	}
+
+  firebase.auth().onAuthStateChanged(function(user) {
+		   
+		    if (user) {
+		    		var ref = firebase.database().ref();
+		    		ref.child("challenges").orderByKey().equalTo(user.uid).on("child_added", function(snapshot) {
+						console.log(snapshot.val().challengerName);
+						if(snapshot.exists()){
+							if (confirm("Challenge by " + snapshot.val().challengerName)) {
+							  	ref = firebase.database().ref();
+							  	var data = {
+							  		player1: snapshot.val().challengerId,
+							  		player2: user.uid
+							  	}
+
+							  	ref.child("currentSets").push(data);
+							  	ref.child("challenges").child(user.uid).remove();
+
+							} else {
+							  ref.child("challenges").child(user.uid).remove();
+							}
+						}
+					});	  
+		    } 
+		});
+
+
+
+
 	window.onload = function() {
 		
 		var ladder;
@@ -201,10 +288,11 @@
 				}).then(function() {
 					ladderData.sort(sortSets);
 					//ladderData.sort(sortSetPercentage);
-
+					var uid;
 					for(var i = 0; i < ladderData.length; i++){
 						for(var j = 0; j < 5; j++){
 							console.log(ladderData[i][j]);
+							
 						}
 					}
 					
@@ -248,7 +336,15 @@
 					    var text3 = document.createTextNode(ladderData[i][2]);
 					    var text4 = document.createTextNode(ladderData[i][3]);
 					    var text5 = document.createTextNode(ladderData[i][4]);
+					   
+					    var button = document.createElement('button');
+  						button.innerHTML = 'Challenge';
 
+  						//button.setAttribute(att, ladderData[i][1]);
+  						
+  						button.onclick = (function(uid) {
+  							return function() {makeButton(uid);};
+  						})(ladderData[i][1]);
 
 					    rank.appendChild(text1);
 					    pname.appendChild(text2);
@@ -260,6 +356,9 @@
 					    tr.appendChild(setsplayed);
 					    tr.appendChild(setwinpercent);
 					    tr.appendChild(gamewinpercent);
+					    if(!(user.uid === ladderData[i][1])){
+					    	tr.appendChild(button);
+					    }
 
 
 					    table.appendChild(tr);
@@ -289,6 +388,7 @@
 
 		document.getElementById('profile').addEventListener('click', Profile, false);
 		document.getElementById('leave-ladder').addEventListener('click', Leave, false);
+		document.getElementById('delete-ladder').addEventListener('click', Delete, false);
 		firebase.auth().onAuthStateChanged(function(user) {
 	    
       	});
@@ -328,5 +428,6 @@ td {
 <footer>
 	<button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
 	<button class="mdl-button mdl-js-button mdl-button--raised" id="leave-ladder" name="signup">Leave ladder</button>
+	<button class="mdl-button mdl-js-button mdl-button--raised" id="delete-ladder" name="signup">Delete ladder</button>
 </footer>
 </html>
