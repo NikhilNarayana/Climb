@@ -13,6 +13,7 @@
 		</header>
 	</div>
 	<br>
+	<div class="column col-12" id=navbar style="height:50px;"></div>
 	<title>Ladder</title>
 	
 	 <script src="/__/firebase/5.5.8/firebase-app.js"></script>
@@ -25,6 +26,7 @@
 
 	NotisElem = document.getElementById("notis");
 		// Retrieve Firebase Messageing object
+	// Retrieve Firebase Messageing object
 		const messaging = firebase.messaging();
 
 		// Add the public key generated from the console
@@ -82,6 +84,8 @@
     NotisElem.innerHTML = NotisElem.innerHTML + JSON.stringify(payload);
     // [END_EXCLUDE]
   	});
+
+	document.getElementById("navbar").innerHTML='<object type=text/html data="nav.html"></object>'
 
 	function Profile(){
 		window.location = 'profile.html';
