@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<div class="column col-12" id=navbar style="height:50px;"></div>
+	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+	<br>
+	<div class="column col-12" id="nav">
+		<header class="navbar">
+		  <section class="navbar-section">
+		    <img src="images/Climb.png" class="navbar-brand mr-2" style="width:10%;"/>
+		    <a href="https://github.com/NikhilNarayana/Climb" class="btn btn-link">GitHub</a>
+		  </section>
+		</header>
+	</div>
 	<br>
 	<title>Report Your Set</title>
 
@@ -11,7 +20,6 @@
   	<script src="/__/firebase/init.js"></script>
   	<script src="database.js"></script>
 	<script type="text/javascript">
-	document.getElementById("navbar").innerHTML='<object type=text/html data="nav.html"></object>'
 	var p1, p2, p1_id, p2_id, ladder;
 
 
@@ -44,16 +52,20 @@
 
 					var setPercentage = setWins / setsPlayed;
 					var gamePercentage = gameWins / gamesPlayed;
+					gamePercentage = gamePercentage * 100;
+					setPercentage = setPercentage * 100;
+					gamePercentage.toFixed(2);
+					setPercentage.toFixed(2);
 
 					console.log(playerData[keys[0]].gameWins);
 
 					ref.child(ladder).child(keys[0]).set({
-						gamePercentage: gamePercentage * 100,
+						gamePercentage: gamePercentage,
 						gameWins: gameWins,
 						gamesPlayed: gamesPlayed,
 						playerId: p1_id,
 						playerName: p1,
-						setPercentage: setPercentage * 100,
+						setPercentage: setPercentage,
 						setWins: setWins,
 						setsPlayed: setsPlayed
 					})
@@ -80,16 +92,20 @@
 
 					var setPercentage = setWins / setsPlayed;
 					var gamePercentage = gameWins / gamesPlayed;
+					gamePercentage = gamePercentage * 100;
+					setPercentage = setPercentage * 100;
+					gamePercentage.toFixed(2);
+					setPercentage.toFixed(2);
 
 					console.log(playerData[keys[0]].gameWins);
 
 					ref.child(ladder).child(keys[0]).set({
-						gamePercentage: gamePercentage * 100,
+						gamePercentage: gamePercentage,
 						gameWins: gameWins,
 						gamesPlayed: gamesPlayed,
 						playerId: p2_id,
 						playerName: p2,
-						setPercentage: setPercentage * 100,
+						setPercentage: setPercentage,
 						setWins: setWins,
 						setsPlayed: setsPlayed
 					})
