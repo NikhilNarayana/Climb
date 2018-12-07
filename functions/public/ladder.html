@@ -283,23 +283,54 @@
 		firebase.auth().onAuthStateChanged(function(user) {
 			ref = firebase.database().ref();
 
-			ref.child("challenges").orderByChild("challengerId").equalTo(user.uid).once("value",snapshot => {
-			    if (snapshot.exists()){
-			    	console.log(snapshot.val());
-			    	var playerData = snapshot.val();
-				   	var keys = Object.keys(playerData);
-				   	ref.child("challenges").child(keys[0]).remove()
-			    }
-			}).then(function(){
-				ref.child("challenges").child(uid).set({
+			ref.child("currentSets").orderByChild("player1").equalTo(uid).once("value",snapshot => {
+				if (snapshot.exists()){
+					alert("Already in a challenge");
+					return;
+				}else{
+					ref.child("currentSets").orderByChild("player2").equalTo(uid).once("value",snapshot => {
+						if (snapshot.exists()){
+							alert("Already in a challenge");
+							return;
+						}else{
 
-					challengerId: user.uid,
-					challengerName: user.displayName
-				});
-			}).catch(function(err){
+
+
+							ref.child("challenges").orderByChild("challengerId").equalTo(user.uid).once("value",snapshot => {
+							    if (snapshot.exists()){
+							    	console.log(snapshot.val());
+							    	var playerData = snapshot.val();
+								   	var keys = Object.keys(playerData);
+								   	ref.child("challenges").child(keys[0]).remove()
+							    }
+							}).then(function(){
+								ref.child("challenges").child(uid).set({
+
+									challengerId: user.uid,
+									challengerName: user.displayName
+								});
+							}).catch(function(err){
+
+							});
+
+
+
+
+
+
+							
+						}
+
+
+
+					});
+
+				}
+
+
 
 			});
-
+			
 
 
 

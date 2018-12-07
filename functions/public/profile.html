@@ -63,6 +63,10 @@
 			    	
 			    	roomLimit = snapshot.val()[Object.keys(snapshot.val())[0]].Max_players;
 			    	console.log(roomLimit);
+			    }else{
+			    	alert("Invalid ladder code");
+			    	return;
+
 			    }
 				}).then(function() {
 					
