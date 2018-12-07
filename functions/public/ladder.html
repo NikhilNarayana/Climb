@@ -23,7 +23,8 @@
   
 	<script type="text/javascript">
 
-	// Retrieve Firebase Messageing object
+	NotisElem = document.getElementById("notis");
+		// Retrieve Firebase Messageing object
 		const messaging = firebase.messaging();
 
 		// Add the public key generated from the console
@@ -33,6 +34,7 @@
 		  console.log('Notification permission granted.');
 		  // TODO(developer): Retrieve an Instance ID token for use with FCM.
 		  // ...
+		  return messaging.getToken();
 		}).catch(function(err) {
 		  console.log('Unable to get permission to notify.', err);
 		});
@@ -77,7 +79,7 @@
     console.log('Message received. ', payload);
     // [START_EXCLUDE]
     // Update the UI to include the received message.
-    appendMessage(payload);
+    NotisElem.innerHTML = NotisElem.innerHTML + JSON.stringify(payload);
     // [END_EXCLUDE]
   	});
 
@@ -384,6 +386,7 @@ td {
 	 <p id="maxPlayers"></p>
 	 <table id="tablearea"></table>
 	 <br>
+	 <div id="notis"></div>
 </body>
 <footer>
 	<button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
