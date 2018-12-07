@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
-	<br>
-	<div class="column col-12" id="nav">
-		<header class="navbar">
-		  <section class="navbar-section">
-		    <img src="images/Climb.png" class="navbar-brand mr-2" style="width:10%;"/>
-		    <a href="https://github.com/NikhilNarayana/Climb" class="btn btn-link">GitHub</a>
-		  </section>
-		</header>
-	</div>
+	<div class="column col-12" id=navbar style="height:50px;"></div>
 	<br>
 	<title>Profile</title>
 	
@@ -21,6 +12,8 @@
   	<script src="/__/firebase/init.js"></script>
   	<script src="database.js"></script>
 	<script type="text/javascript">
+
+	document.getElementById("navbar").innerHTML='<object type=text/html data="nav.html"></object>'
 
 	function SignOut() {
         firebase.auth().signOut();
@@ -257,7 +250,6 @@
     function errData(data){
     	console.log(data);
     }
-
 
 	</script>
 

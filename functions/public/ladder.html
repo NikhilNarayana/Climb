@@ -2,6 +2,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+	<link rel="manifest" href="/manifest.json">
 	<br>
 	<div class="column col-12" id="nav">
 		<header class="navbar">
@@ -12,14 +13,79 @@
 		</header>
 	</div>
 	<br>
+	<div class="column col-12" id=navbar style="height:50px;"></div>
 	<title>Ladder</title>
 	
-	 <script src="/__/firebase/5.5.8/firebase-app.js"></script>
+	<script src="/__/firebase/5.5.8/firebase-app.js"></script>
   	<script src="/__/firebase/5.5.8/firebase-auth.js"></script>
   	<script src="/__/firebase/5.5.8/firebase-database.js"></script>
+  	<script src="/__/firebase/5.6.0/firebase-messaging.js"></script>
   	<script src="/__/firebase/init.js"></script>
   
 	<script type="text/javascript">
+
+	NotisElem = document.getElementById("notis");
+		// Retrieve Firebase Messageing object
+	// Retrieve Firebase Messageing object
+		const messaging = firebase.messaging();
+
+		// Add the public key generated from the console
+		messaging.usePublicVapidKey("BNfRmr5XlPRXjPd3PEOx_cWG98GsX33jcmneAMNukaeFit5PY7-oZxafJ7Y71xxMta331NKm2Bl9-G-sZpl_o0E");
+
+		messaging.requestPermission().then(function() {
+		  console.log('Notification permission granted.');
+		  // TODO(developer): Retrieve an Instance ID token for use with FCM.
+		  // ...
+		  return messaging.getToken();
+		}).catch(function(err) {
+		  console.log('Unable to get permission to notify.', err);
+		});
+
+		// Get Instance ID token. Initially this makes a network call, once retrieved
+		// subsequent calls to getToken will return from cache.
+		messaging.getToken().then(function(currentToken) {
+		  if (currentToken) {
+		    sendTokenToServer(currentToken);
+		    updateUIForPushEnabled(currentToken);
+		  } else {
+		    // Show permission request.
+		    console.log('No Instance ID token available. Request permission to generate one.');
+		    // Show permission UI.
+		    updateUIForPushPermissionRequired();
+		    setTokenSentToServer(false);
+		  }
+		}).catch(function(err) {
+		  console.log('An error occurred while retrieving token. ', err);
+		  showToken('Error retrieving Instance ID token. ', err);
+		  setTokenSentToServer(false);
+		});
+
+		// Callback fired if Instance ID token is updated.
+		messaging.onTokenRefresh(function() {
+		  messaging.getToken().then(function(refreshedToken) {
+		    console.log('Token refreshed.');
+		    // Indicate that the new Instance ID token has not yet been sent to the
+		    // app server.
+		    setTokenSentToServer(false);
+		    // Send Instance ID token to app server.
+		    sendTokenToServer(refreshedToken);
+		    // ...
+		  }).catch(function(err) {
+		    console.log('Unable to retrieve refreshed token ', err);
+		    showToken('Unable to retrieve refreshed token ', err);
+		  });
+		});
+
+	// Receive message
+	messaging.onMessage(function(payload) {
+    console.log('Message received. ', payload);
+    // [START_EXCLUDE]
+    // Update the UI to include the received message.
+    NotisElem.innerHTML = NotisElem.innerHTML + JSON.stringify(payload);
+    // [END_EXCLUDE]
+  	});
+
+	document.getElementById("navbar").innerHTML='<object type=text/html data="nav.html"></object>'
 
 	function Profile(){
 		window.location = 'profile.html';
@@ -424,6 +490,7 @@ td {
 	 <p id="maxPlayers"></p>
 	 <table id="tablearea"></table>
 	 <br>
+	 <div id="notis"></div>
 </body>
 <footer>
 	<button class="mdl-button mdl-js-button mdl-button--raised" id="profile" name="signup">Profile</button>
